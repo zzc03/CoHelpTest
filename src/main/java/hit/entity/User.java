@@ -14,6 +14,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id",nullable = false)
     private Integer userId;
     @Column(name="user_name")
     private String name;
@@ -25,6 +26,15 @@ public class User {
     private String description;
     @Column(name="user_money")
     private Integer money;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public String getName() {
         return name;
     }

@@ -16,12 +16,21 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    @GetMapping("/user/query/all")
+    public List<User> getAllUser() {
+        List<User> user=userRepository.findAll();
+        return user;
+    }
     @GetMapping("/user/querybyid")
-    public User getUserList(@RequestParam("userid")Integer userid) {
-        User user=userRepository.findByUserId(userid);
+    public User getUserByid(@RequestParam("userid")Integer userid) {
+        User user=userRepository.findAllByUserId(userid);
         return user;
         }
-
+    @GetMapping("/user/querybyaccount")
+    public User getUserByAccount(@RequestParam("account")String account) {
+        User user=userRepository.findAllByAccount(account);
+        return user;
+    }
 
     //post方法插入一个用户
     @PostMapping(value = "/user/add")
@@ -41,7 +50,7 @@ public class UserController {
     @GetMapping("/user/query")
     public User findUser(@RequestParam("userId") Integer userId,@RequestParam("password") String password){
         System.out.println("进入查询数据方法！");
-        User user=userRepository.findByUserId(userId);
+        User user=userRepository.findAllByUserId(userId);
         System.out.println("查询的id为"+userId);
         System.out.println("查询的密码为"+user.getPassword());
         System.out.println("查询的密码为"+user.getPassword());

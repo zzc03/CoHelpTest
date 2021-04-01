@@ -9,7 +9,8 @@ import java.util.Map;
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
 
-    User findByUserId(Integer userId);
-    User findByAccount(String account);
+    User findAllByUserId(Integer userId);
+    User findAllByAccount(String account);
+
 
 }

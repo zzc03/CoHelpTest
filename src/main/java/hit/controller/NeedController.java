@@ -46,13 +46,12 @@ public class NeedController {
             for (Need need: needs)
             {
                 System.out.println("查询出的userid为"+need.getUserid());
-                User user=userRepository.findByUserId(need.getUserid());
+                User user=userRepository.findAllByUserId(need.getUserid());
                 System.out.println("查询出的user为"+user);
                 String userName = user.getName();
                 System.out.println("查询出的name为"+userName);
 
                 String state=need.getState();
-
                 ItemNeed itemneed=new ItemNeed(need,userName,state);
                 items.add(itemneed);
             }
