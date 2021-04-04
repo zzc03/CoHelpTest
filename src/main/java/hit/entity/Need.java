@@ -12,7 +12,7 @@ public class Need {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="need_id")
-    private Integer need_id;
+    private Integer needId;
     @Column(name="need_title")
     private String title;
     @Column(name="need_text")
@@ -29,7 +29,7 @@ public class Need {
     public Need() {
     }
     public Need(Integer id) {
-        this.need_id=id;
+        this.needId=id;
     }
 
 
@@ -45,11 +45,11 @@ public class Need {
     }
 
     public Integer getNeedid() {
-        return need_id;
+        return needId;
     }
 
     public void setNeedid(Integer needid) {
-        this.need_id = needid;
+        this.needId = needid;
     }
 
     public String getTitle() {
@@ -85,11 +85,11 @@ public class Need {
     }
 
     public Integer getNeed_id() {
-        return need_id;
+        return needId;
     }
 
     public void setNeed_id(Integer need_id) {
-        this.need_id = need_id;
+        this.needId = need_id;
     }
 
     public Integer getReward() {
@@ -111,7 +111,7 @@ public class Need {
     @Override
     public String toString() {
         return "Need{" +
-                "need_id=" + need_id +
+                "need_id=" + needId +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
                 ", time=" + time +

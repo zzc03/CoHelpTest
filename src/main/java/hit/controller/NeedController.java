@@ -5,6 +5,7 @@ import hit.entity.Need;
 import hit.entity.User;
 import hit.repository.NeedRepository;
 import hit.repository.UserRepository;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @EnableAutoConfiguration
 
@@ -109,6 +111,20 @@ public class NeedController {
             return result;
         }
         catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+    @GetMapping("/need/querybyneedid")
+    public ItemNeed findNeedByNeedid(@RequestParam("needid")Integer needid)
+    {
+        try{
+            Need need=needRepository.findByNeedId(needid);
+            String username=userRepository.findAllByUserId(need.getUserid()).getName();
+            String state=need.getState();
+            ItemNeed itemNeed=new ItemNeed(need,username,state);
+            return itemNeed;
+        }catch (Exception e){
             System.out.println(e);
             return null;
         }
