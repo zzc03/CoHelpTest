@@ -91,5 +91,27 @@ public class NeedController {
             return null;
         }
     }
+    @GetMapping("/need/query/all/map/with")
+    public List<ItemNeed> findAllMapWithKeyword(@RequestParam("keyword")String keyword) {
+        System.out.println("进入查询包含关键字所有需求方法");
+        try {
+            List<Need> needs = needRepository.getByTextContainingOrTitleContaining(keyword,keyword);
+            List<ItemNeed> result=new ArrayList<>();
+            System.out.println("查询出的所有需求为");
+            for(Need b:needs)
+            {
+                System.out.println(b);
+                String username=userRepository.findAllByUserId(b.getUserid()).getName();
+                String state=b.getState();
+                ItemNeed itemNeed=new ItemNeed(b,username,state);
+                result.add(itemNeed);
+            }
+            return result;
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
 }
