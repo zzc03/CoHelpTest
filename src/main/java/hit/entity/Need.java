@@ -25,6 +25,8 @@ public class Need {
     private Integer reward;
     @Column(name="need_user_id")
     private Integer userid;
+    @Column(name="need_ismultiple")
+    private Integer ismultiple;//表示是否允许多回答0代表不允许，1代表可以
 
     public Need() {
     }
@@ -42,6 +44,16 @@ public class Need {
         this.state = state;
         this.reward = reward;
         this.userid = userid;
+    }
+
+    public Need(String title, String text, String time, String state, Integer reward, Integer userid, Integer ismultiple) {
+        this.title = title;
+        this.text = text;
+        this.time = time;
+        this.state = state;
+        this.reward = reward;
+        this.userid = userid;
+        this.ismultiple = ismultiple;
     }
 
     public Integer getNeedid() {
@@ -108,16 +120,33 @@ public class Need {
         this.userid = userid;
     }
 
+    public Integer getNeedId() {
+        return needId;
+    }
+
+    public void setNeedId(Integer needId) {
+        this.needId = needId;
+    }
+
+    public Integer getIsmultiple() {
+        return ismultiple;
+    }
+
+    public void setIsmultiple(Integer ismultiple) {
+        this.ismultiple = ismultiple;
+    }
+
     @Override
     public String toString() {
         return "Need{" +
-                "need_id=" + needId +
+                "needId=" + needId +
                 ", title='" + title + '\'' +
                 ", text='" + text + '\'' +
-                ", time=" + time +
+                ", time='" + time + '\'' +
                 ", state='" + state + '\'' +
                 ", reward=" + reward +
                 ", userid=" + userid +
+                ", ismultiple=" + ismultiple +
                 '}';
     }
 }

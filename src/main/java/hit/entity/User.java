@@ -26,7 +26,8 @@ public class User {
     private String description;
     @Column(name="user_money")
     private Integer money;
-
+    @Column(name="user_icon")
+    private byte[] icon;
     public Integer getUserId() {
         return userId;
     }
@@ -126,6 +127,23 @@ public class User {
         this.password = password;
         this.description = description;
         this.money = money;
+    }
+
+    public User(String name, String account, String password, String description, Integer money, byte[] icon) {
+        this.name = name;
+        this.account = account;
+        this.password = password;
+        this.description = description;
+        this.money = money;
+        this.icon = icon;
+    }
+
+    public byte[] getIcon() {
+        return icon;
+    }
+
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
     }
 
     @Override
