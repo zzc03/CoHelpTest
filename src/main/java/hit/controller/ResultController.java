@@ -3,6 +3,7 @@ import hit.entity.ItemResult;
 import hit.entity.Picture;
 import hit.entity.Result;
 import hit.entity.User;
+import hit.repository.NeedRepository;
 import hit.repository.PictureRepository;
 import hit.repository.ResultRepository;
 import hit.repository.UserRepository;
@@ -28,6 +29,8 @@ public class ResultController {
     UserRepository userRepository;
     @Autowired
     PictureRepository pictureRepository;
+    @Autowired
+    NeedRepository needRepository;
     @GetMapping("/result/querybyid")
     public List<ItemResult> getResultsById(@RequestParam("needid")Integer needid)
     {
@@ -139,6 +142,14 @@ public class ResultController {
     {
         try{
             Result result=resultRepository.getAllByResultId(resultid);
+            Integer publishid=needRepository.findByNeedId(result.getNeedid()).getUserid();
+            Integer acceptid=result.getAcceptuserid();
+            User publish=userRepository.findAllByUserId(publishid);
+            publish.setMoney(publish.getMoney()-reward);
+            userRepository.saveAndFlush(publish);
+            User accept=userRepository.findAllByUserId(acceptid);
+            accept.setMoney(accept.getMoney()+reward);
+            userRepository.saveAndFlush(accept);
             result.setReward(reward);
             resultRepository.saveAndFlush(result);
             return true;
