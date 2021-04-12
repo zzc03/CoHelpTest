@@ -129,5 +129,17 @@ public class NeedController {
             return null;
         }
     }
+    @GetMapping("/need/querybyuserid")
+    public List<ItemNeed> getNeedByUserid(@RequestParam("userid")Integer userid)
+    {
+        List<ItemNeed> results=new ArrayList<>();
+        List<Need> needs=needRepository.getAllByUserid(userid);
+        for(Need a:needs)
+        {
+            String username=userRepository.findAllByUserId(userid).getName();
+            results.add(new ItemNeed(a,username,""));
+        }
+        return results;
+    }
 
 }

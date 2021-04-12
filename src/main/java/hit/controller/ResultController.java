@@ -1,10 +1,19 @@
 package hit.controller;
+import hit.entity.ItemResult;
+import hit.entity.Picture;
+import hit.entity.Result;
 import hit.entity.User;
+import hit.repository.PictureRepository;
+import hit.repository.ResultRepository;
 import hit.repository.UserRepository;
+//import com.lzy.imagepicker.bean.ImageItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 //import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -13,4 +22,130 @@ import java.util.List;
 
 @RestController
 public class ResultController {
+    @Autowired
+    ResultRepository resultRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    PictureRepository pictureRepository;
+    @GetMapping("/result/querybyid")
+    public List<ItemResult> getResultsById(@RequestParam("needid")Integer needid)
+    {
+        List<ItemResult> results=new ArrayList<>();
+        List<Result> result=resultRepository.getAllByNeedid(needid);
+        for(Result a:result)
+        {
+            String name=userRepository.findAllByUserId(a.getAcceptuserid()).getName();
+            results.add(new ItemResult(a,name));
+        }
+
+        return results;
+    }
+    @GetMapping("/result/querybyneedidanduserid")
+    public boolean isAccpeted(@RequestParam("needid") Integer needid,@RequestParam("userid") Integer userid)
+    {
+
+        List<Result> results=resultRepository.getAllByNeedid(needid);
+        for(Result a:results)
+        {
+            if(a.getAcceptuserid()==userid)
+            {
+                return true;
+
+            }
+        }
+        return false;
+    }
+    @PostMapping("/result/add")
+    public void addResult(@RequestParam("needid")Integer needid,@RequestParam("userid")Integer userid,@RequestParam("text")String text,@RequestParam("picture") byte[][] pictures)
+    {
+        Date date=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+                Result result=new Result(needid,userid,"doing",sdf.format(date),text,pictures.length,0);
+                Result b=resultRepository.save(result);
+                if(pictures.length!=0)
+                {
+                    for(byte[] a:pictures)
+                    {
+                        pictureRepository.save(new Picture(b.getResultId(),a));
+                    }
+                }
+        }catch (Exception e){
+            System.out.println("insert error");
+
+        }
+
+
+    }
+    @GetMapping("/result/querybyresultid")
+    public ItemResult getResultsByResultId(@RequestParam("resultid")Integer resultid)
+    {
+        Result result=resultRepository.getAllByResultId(resultid);
+        String name=userRepository.findAllByUserId(result.getAcceptuserid()).getName().toString();
+
+        if(result.getPicture()!=0)
+        {
+            List<Picture> pictures=pictureRepository.getAllByResultid(resultid);
+            byte[][] b=new byte[pictures.size()][];
+            int i=0;
+            for (Picture a:pictures)
+            {
+                b[i]=a.getPicture();
+                i++;
+            }
+            return new ItemResult(result,name,b);
+        }
+        else
+        {
+            return new ItemResult(result,name,null);
+        }
+
+
+    }
+    @GetMapping("/result/querybyneedid")
+    public List<ItemResult> getResultsByNeedId(@RequestParam("needid")Integer needid)
+    {
+        List<Result> results=resultRepository.getAllByNeedid(needid);
+        List<ItemResult> results1=new ArrayList<>();
+
+        for(Result a:results)
+        {
+            String name=userRepository.findAllByUserId(a.getAcceptuserid()).getName().toString();
+            if(a.getPicture()!=0)
+            {
+                List<Picture> pictures=pictureRepository.getAllByResultid(a.getResultId());
+
+            byte[][] c=new byte[pictures.size()][];
+            int i=0;
+            for (Picture b:pictures)
+            {
+                c[i]=b.getPicture();
+                i++;
+            }
+               results1.add(new ItemResult(a,name,c));
+            }
+            else
+            {
+                results1.add(new ItemResult(a,name,null));
+            }
+        }
+
+        return results1;
+
+    }
+    @PostMapping("/result/updatereward")
+    public boolean updateReward(@RequestParam("resultid")Integer resultid,@RequestParam("reward") Integer reward)
+    {
+        try{
+            Result result=resultRepository.getAllByResultId(resultid);
+            result.setReward(reward);
+            resultRepository.saveAndFlush(result);
+            return true;
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    return false;
+    }
 }

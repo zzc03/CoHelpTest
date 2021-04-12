@@ -23,21 +23,21 @@ public class Result {
     private String accepttime;
     @Column(name="need_accepttext")
     private String accepttext;
-    @Column(name="need_acceptpicture")
-    private byte[] picture;
+    @Column(name="need_acceptpicturenum")
+    private Integer picturenum;
     @Column(name="result_reward")
     private Integer reward;
 
     public Result() {
     }
 
-    public Result(Integer needid, Integer acceptuserid, String state, String accepttime, String accepttext, byte[] picture, Integer reward) {
+    public Result(Integer needid, Integer acceptuserid, String state, String accepttime, String accepttext, Integer picture, Integer reward) {
         this.needid = needid;
         this.acceptuserid = acceptuserid;
         this.state = state;
         this.accepttime = accepttime;
         this.accepttext = accepttext;
-        this.picture = picture;
+        this.picturenum = picture;
         this.reward = reward;
     }
 
@@ -89,12 +89,12 @@ public class Result {
         this.accepttext = accepttext;
     }
 
-    public byte[] getPicture() {
-        return picture;
+    public Integer getPicture() {
+        return picturenum;
     }
 
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
+    public void setPicture(Integer picture) {
+        this.picturenum = picture;
     }
 
     public Integer getReward() {
@@ -114,7 +114,7 @@ public class Result {
                 ", state='" + state + '\'' +
                 ", accepttime='" + accepttime + '\'' +
                 ", accepttext='" + accepttext + '\'' +
-                ", picture=" + Arrays.toString(picture) +
+                ", picture=" + picturenum +
                 ", reward=" + reward +
                 '}';
     }

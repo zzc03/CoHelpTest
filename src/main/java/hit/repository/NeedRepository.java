@@ -9,4 +9,5 @@ import java.util.List;
 public interface NeedRepository extends JpaRepository<Need,Integer> {
    List<Need> getByTextContainingOrTitleContaining(String content,String title);
    Need findByNeedId(Integer needid);
+   List<Need> getAllByUserid(Integer userid);
 }
