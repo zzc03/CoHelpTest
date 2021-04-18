@@ -27,6 +27,8 @@ public class Result {
     private Integer picturenum;
     @Column(name="result_reward")
     private Integer reward;
+    @Column(name="result_comment")
+    private String comment;
 
     public Result() {
     }
@@ -39,6 +41,17 @@ public class Result {
         this.accepttext = accepttext;
         this.picturenum = picture;
         this.reward = reward;
+    }
+
+    public Result(Integer needid, Integer acceptuserid, String state, String accepttime, String accepttext, Integer picturenum, Integer reward, String comment) {
+        this.needid = needid;
+        this.acceptuserid = acceptuserid;
+        this.state = state;
+        this.accepttime = accepttime;
+        this.accepttext = accepttext;
+        this.picturenum = picturenum;
+        this.reward = reward;
+        this.comment = comment;
     }
 
     public Integer getResultId() {
@@ -103,6 +116,22 @@ public class Result {
 
     public void setReward(Integer reward) {
         this.reward = reward;
+    }
+
+    public Integer getPicturenum() {
+        return picturenum;
+    }
+
+    public void setPicturenum(Integer picturenum) {
+        this.picturenum = picturenum;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override

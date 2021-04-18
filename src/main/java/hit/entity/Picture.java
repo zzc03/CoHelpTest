@@ -16,12 +16,12 @@ public class Picture {
     @Column(name="result_id")
     private Integer resultid;
     @Column(name="picture")
-    private byte[] picture;
+    private String picture;
 
     public Picture() {
     }
 
-    public Picture(Integer resultid, byte[] picture) {
+    public Picture(Integer resultid, String picture) {
         this.resultid = resultid;
         this.picture = picture;
     }
@@ -42,11 +42,11 @@ public class Picture {
         this.resultid = resultid;
     }
 
-    public byte[] getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 
@@ -55,7 +55,7 @@ public class Picture {
         return "Picture{" +
                 "pictureid=" + pictureid +
                 ", resultid=" + resultid +
-                ", picture=" + Arrays.toString(picture) +
+                ", picture=" + picture +
                 '}';
     }
 }

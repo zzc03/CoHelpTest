@@ -1,11 +1,12 @@
 package hit.entity;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ItemResult {
     private Result result;
     private String name;
-    private byte[][] pictures;
+    private List<String> pictures;
 
     public ItemResult() {
     }
@@ -15,7 +16,7 @@ public class ItemResult {
         this.name = name;
     }
 
-    public ItemResult(Result result, String name, byte[][] pictures) {
+    public ItemResult(Result result, String name, List<String> pictures) {
         this.result = result;
         this.name = name;
         this.pictures = pictures;
@@ -37,11 +38,11 @@ public class ItemResult {
         this.name = name;
     }
 
-    public byte[][] getPictures() {
+    public List<String> getPictures() {
         return pictures;
     }
 
-    public void setPictures(byte[][] pictures) {
+    public void setPictures(List<String> pictures) {
         this.pictures = pictures;
     }
 
@@ -50,7 +51,7 @@ public class ItemResult {
         return "ItemResult{" +
                 "result=" + result +
                 ", name='" + name + '\'' +
-                ", pictures=" + Arrays.toString(pictures) +
+                ", pictures=" +pictures +
                 '}';
     }
 }

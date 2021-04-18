@@ -60,16 +60,16 @@ public class ResultController {
         return false;
     }
     @PostMapping("/result/add")
-    public void addResult(@RequestParam("needid")Integer needid,@RequestParam("userid")Integer userid,@RequestParam("text")String text,@RequestParam("picture") byte[][] pictures)
+    public void addResult(@RequestParam("needid")Integer needid,@RequestParam("userid")Integer userid,@RequestParam("text")String text,@RequestParam("picture") List<String> pictures)
     {
         Date date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-                Result result=new Result(needid,userid,"doing",sdf.format(date),text,pictures.length,0);
+                Result result=new Result(needid,userid,"doing",sdf.format(date),text,pictures.size(),0);
                 Result b=resultRepository.save(result);
-                if(pictures.length!=0)
+                if(pictures.size()!=0)
                 {
-                    for(byte[] a:pictures)
+                    for(String a:pictures)
                     {
                         pictureRepository.save(new Picture(b.getResultId(),a));
                     }
@@ -90,12 +90,10 @@ public class ResultController {
         if(result.getPicture()!=0)
         {
             List<Picture> pictures=pictureRepository.getAllByResultid(resultid);
-            byte[][] b=new byte[pictures.size()][];
-            int i=0;
+            List<String> b=new ArrayList<>();
             for (Picture a:pictures)
             {
-                b[i]=a.getPicture();
-                i++;
+                b.add(a.getPicture());
             }
             return new ItemResult(result,name,b);
         }
@@ -119,14 +117,12 @@ public class ResultController {
             {
                 List<Picture> pictures=pictureRepository.getAllByResultid(a.getResultId());
 
-            byte[][] c=new byte[pictures.size()][];
-            int i=0;
-            for (Picture b:pictures)
-            {
-                c[i]=b.getPicture();
-                i++;
-            }
-               results1.add(new ItemResult(a,name,c));
+                List<String> b=new ArrayList<>();
+                for (Picture c:pictures)
+                {
+                    b.add(c.getPicture());
+                }
+               results1.add(new ItemResult(a,name,b));
             }
             else
             {
@@ -138,7 +134,7 @@ public class ResultController {
 
     }
     @PostMapping("/result/updatereward")
-    public boolean updateReward(@RequestParam("resultid")Integer resultid,@RequestParam("reward") Integer reward)
+    public boolean updateReward(@RequestParam("resultid")Integer resultid,@RequestParam("reward") Integer reward,@RequestParam("comment")String comment)
     {
         try{
             Result result=resultRepository.getAllByResultId(resultid);
@@ -151,6 +147,7 @@ public class ResultController {
             accept.setMoney(accept.getMoney()+reward);
             userRepository.saveAndFlush(accept);
             result.setReward(reward);
+            result.setComment(comment);
             resultRepository.saveAndFlush(result);
             return true;
         }catch (Exception e)
