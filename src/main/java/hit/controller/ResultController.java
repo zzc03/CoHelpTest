@@ -1,8 +1,5 @@
 package hit.controller;
-import hit.entity.ItemResult;
-import hit.entity.Picture;
-import hit.entity.Result;
-import hit.entity.User;
+import hit.entity.*;
 import hit.repository.NeedRepository;
 import hit.repository.PictureRepository;
 import hit.repository.ResultRepository;
@@ -65,8 +62,11 @@ public class ResultController {
         Date date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-                Result result=new Result(needid,userid,"doing",sdf.format(date),text,pictures.size(),0);
+                Result result=new Result(needid,userid,"正在进行",sdf.format(date),text,pictures.size(),0);
                 Result b=resultRepository.save(result);
+                Need need=needRepository.findByNeedId(needid);
+                need.setState("正在进行");
+                needRepository.saveAndFlush(need);
                 if(pictures.size()!=0)
                 {
                     for(String a:pictures)
@@ -149,11 +149,43 @@ public class ResultController {
             result.setReward(reward);
             result.setComment(comment);
             resultRepository.saveAndFlush(result);
+            Need need=needRepository.findByNeedId(result.getNeedid());
+            need.setState("已完成");
+            needRepository.saveAndFlush(need);
             return true;
         }catch (Exception e)
         {
             e.printStackTrace();
         }
     return false;
+    }
+    @GetMapping("/result/querybyacceptuserid")
+    public List<ItemResult> getResultsByacceptuserId(@RequestParam("userid")Integer userid)
+    {
+        List<Result> results=resultRepository.getAllByAcceptuserid(userid);
+        List<ItemResult> results1=new ArrayList<>();
+
+        for(Result a:results)
+        {
+            String name=userRepository.findAllByUserId(a.getAcceptuserid()).getName();
+            if(a.getPicture()!=0)
+            {
+                List<Picture> pictures=pictureRepository.getAllByResultid(a.getResultId());
+
+                List<String> b=new ArrayList<>();
+                for (Picture c:pictures)
+                {
+                    b.add(c.getPicture());
+                }
+                results1.add(new ItemResult(a,name,b));
+            }
+            else
+            {
+                results1.add(new ItemResult(a,name,null));
+            }
+        }
+
+        return results1;
+
     }
 }

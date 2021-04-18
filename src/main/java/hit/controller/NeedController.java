@@ -85,7 +85,7 @@ public class NeedController {
         Date date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try{
-            need=new Need(title,text,sdf.format(date),"none",reward,userid);
+            need=new Need(title,text,sdf.format(date),"未完成",reward,userid,0);
             need=needRepository.save(need);
             return need;
         }catch (Exception e){

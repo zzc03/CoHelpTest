@@ -10,4 +10,5 @@ import java.util.List;
 public interface ResultRepository extends JpaRepository<Result,Integer> {
     public List<Result> getAllByNeedid(Integer needid);
     public Result getAllByResultId(Integer resultid);
+    public List<Result> getAllByAcceptuserid(Integer userid);
 }
