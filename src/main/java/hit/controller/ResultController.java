@@ -85,7 +85,8 @@ public class ResultController {
     public ItemResult getResultsByResultId(@RequestParam("resultid")Integer resultid)
     {
         Result result=resultRepository.getAllByResultId(resultid);
-        String name=userRepository.findAllByUserId(result.getAcceptuserid()).getName().toString();
+        User user=userRepository.findAllByUserId(result.getAcceptuserid());
+        String name=user.getName();
 
         if(result.getPicture()!=0)
         {
@@ -95,11 +96,11 @@ public class ResultController {
             {
                 b.add(a.getPicture());
             }
-            return new ItemResult(result,name,b);
+            return new ItemResult(user.getIcon(),result,name,b);
         }
         else
         {
-            return new ItemResult(result,name,null);
+            return new ItemResult(user.getIcon(),result,name,null);
         }
 
 
