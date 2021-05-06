@@ -1,10 +1,10 @@
 package hit.controller;
 
-import hit.entity.ItemNeed;
-import hit.entity.Need;
-import hit.entity.User;
+import hit.entity.*;
+import hit.repository.NeedApplyRepository;
 import hit.repository.NeedRepository;
 import hit.repository.UserRepository;
+import hit.repository.ZhongcaiRepository;
 import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -26,7 +26,11 @@ public class NeedController {
     @Autowired
     private NeedRepository needRepository;
     @Autowired
+    private NeedApplyRepository needApplyRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ZhongcaiRepository zhongcaiRepository;
     @GetMapping("/need/query/all")
     public List<Need> getAllNeed()
     {
@@ -54,7 +58,7 @@ public class NeedController {
                 System.out.println("查询出的name为"+userName);
 
                 String state=need.getState();
-                ItemNeed itemneed=new ItemNeed(need,userName,state);
+                ItemNeed itemneed=new ItemNeed(need,userName,state,user.getIcon());
                 items.add(itemneed);
             }
             for(ItemNeed a:items)
@@ -78,15 +82,17 @@ public class NeedController {
 //        }
 //    }
     @PostMapping(value = "/need/add")
-    public Need addNeed(@RequestParam("userid")Integer userid,@RequestParam("title")String title, @RequestParam("text")String text,@RequestParam("reward")Integer reward)
+    public NeedApply addNeed(@RequestParam("userid")Integer userid,@RequestParam("title")String title, @RequestParam("text")String text,@RequestParam("reward")Integer reward)
     {
         System.out.println("进入插入数据方法！");
-        Need need;
+        NeedApply need;
         Date date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try{
-            need=new Need(title,text,sdf.format(date),"未完成",reward,userid,0);
-            need=needRepository.save(need);
+//            need=new Need(title,text,sdf.format(date),"未完成",reward,userid,0);
+//            need=needRepository.save(need);
+            need=new NeedApply(userid,title,text,sdf.format(date),reward,"申请中",null,null,null);
+            need=needApplyRepository.save(need);
             return need;
         }catch (Exception e){
             System.out.println("insert error");
@@ -103,9 +109,10 @@ public class NeedController {
             for(Need b:needs)
             {
                 System.out.println(b);
-                String username=userRepository.findAllByUserId(b.getUserid()).getName();
+                User user=userRepository.findAllByUserId(b.getUserid());
+                String username=user.getName();
                 String state=b.getState();
-                ItemNeed itemNeed=new ItemNeed(b,username,state);
+                ItemNeed itemNeed=new ItemNeed(b,username,state,user.getIcon());
                 result.add(itemNeed);
             }
             return result;
@@ -120,9 +127,10 @@ public class NeedController {
     {
         try{
             Need need=needRepository.findByNeedId(needid);
-            String username=userRepository.findAllByUserId(need.getUserid()).getName();
+            User user=userRepository.findAllByUserId(need.getUserid());
+            String username=user.getName();
             String state=need.getState();
-            ItemNeed itemNeed=new ItemNeed(need,username,state);
+            ItemNeed itemNeed=new ItemNeed(need,username,state,user.getIcon());
             return itemNeed;
         }catch (Exception e){
             System.out.println(e);
@@ -136,10 +144,88 @@ public class NeedController {
         List<Need> needs=needRepository.getAllByUserid(userid);
         for(Need a:needs)
         {
-            String username=userRepository.findAllByUserId(userid).getName();
-            results.add(new ItemNeed(a,username,""));
+            User user=userRepository.findAllByUserId(a.getUserid());
+            String username=user.getName();
+            results.add(new ItemNeed(a,username,"",user.getIcon()));
         }
         return results;
+    }
+    @GetMapping("/needapply/querybyuserid")
+    public List<ItemNeedApply> findAllApplyMapWithKeyword(@RequestParam("userid") Integer id) {
+        //System.out.println("进入查询包含关键字所有需求方法");
+        try {
+//            List<Need> needs = needRepository.getByTextContainingOrTitleContaining(keyword,keyword);
+//            List<ItemNeed> result=new ArrayList<>();
+//            System.out.println("查询出的所有需求为");
+//            for(Need b:needs)
+//            {
+//                System.out.println(b);
+//                User user=userRepository.findAllByUserId(b.getUserid());
+//                String username=user.getName();
+//                String state=b.getState();
+//                ItemNeed itemNeed=new ItemNeed(b,username,state,user.getIcon());
+//                result.add(itemNeed);
+//            }
+//            return result;
+            List<NeedApply> list=needApplyRepository.getAllByApplyuserid(id);
+            List<ItemNeedApply> result=new ArrayList<>();
+            for(NeedApply a:list)
+            {
+                User user=userRepository.findAllByUserId(a.getApplyuserid());
+                String icon=user.getIcon();
+                result.add(new ItemNeedApply(user.getName(),a,icon));
+            }
+            return result;
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+    @GetMapping("/needapply/querybyneedapplyid")
+    public ItemNeedApply findAllApplyMapWithid(@RequestParam("applyid") Integer id) {
+        //System.out.println("进入查询包含关键字所有需求方法");
+        try {
+//            List<Need> needs = needRepository.getByTextContainingOrTitleContaining(keyword,keyword);
+//            List<ItemNeed> result=new ArrayList<>();
+//            System.out.println("查询出的所有需求为");
+//            for(Need b:needs)
+//            {
+//                System.out.println(b);
+//                User user=userRepository.findAllByUserId(b.getUserid());
+//                String username=user.getName();
+//                String state=b.getState();
+//                ItemNeed itemNeed=new ItemNeed(b,username,state,user.getIcon());
+//                result.add(itemNeed);
+//            }
+//            return result;
+            NeedApply needApply=needApplyRepository.getAllByApplyid(id);
+            User user=userRepository.findAllByUserId(needApply.getApplyuserid());
+            String icon=user.getIcon();
+            ItemNeedApply result=new ItemNeedApply(user.getName(),needApply,icon);
+            return result;
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+    @PostMapping(value = "/need/zhongcai/add")
+    public ZhongCai addNeedZc(@RequestParam("applyid")Integer applyid,@RequestParam("applyuserid")Integer userid,@RequestParam("zcreason")String reason)
+    {
+        System.out.println("进入插入数据方法！");
+        NeedApply need;
+        Date date=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try{
+            need=needApplyRepository.getAllByApplyid(applyid);
+            ZhongCai zhongCai=new ZhongCai(1,need.getApplyid(),reason,need.getApplyuserid(),sdf.format(date),null,null,null,null);
+            zhongcaiRepository.save(zhongCai);
+            return zhongCai;
+        }catch (Exception e){
+            System.out.println("insert error");
+            return null;
+        }
     }
 
 }

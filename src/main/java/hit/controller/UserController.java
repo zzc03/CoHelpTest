@@ -34,10 +34,10 @@ public class UserController {
 
     //post方法插入一个用户
     @PostMapping(value = "/user/add")
-    public User insertUser(@RequestParam("name")String name, @RequestParam("account")String account, @RequestParam("password") String password, @RequestParam("description") String description, @RequestParam("money") Integer money) {
+    public User insertUser(@RequestParam("name")String name, @RequestParam("account")String account, @RequestParam("password") String password, @RequestParam("description") String description, @RequestParam("money") Integer money,@RequestParam("head") String head) {
         System.out.println("进入插入数据方法！");
         User user;
-        user=new User(name, account, password, description, money);
+        user=new User(name, account, password, description, money,head);
         try{
             user=userRepository.save(user);
             return user;

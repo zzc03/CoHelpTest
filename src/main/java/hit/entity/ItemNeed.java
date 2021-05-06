@@ -5,7 +5,7 @@ public class ItemNeed {
     private Need need;
     private String userName;
     private String needState;
-
+    private String head;
     public ItemNeed() {
     }
 
@@ -13,6 +13,13 @@ public class ItemNeed {
         this.need = need;
         this.userName = userName;
         this.needState = needState;
+    }
+
+    public ItemNeed(Need need, String userName, String needState, String head) {
+        this.need = need;
+        this.userName = userName;
+        this.needState = needState;
+        this.head = head;
     }
 
     public Need getNeed() {
@@ -37,6 +44,14 @@ public class ItemNeed {
 
     public void setNeedState(String needState) {
         this.needState = needState;
+    }
+
+    public String getHead() {
+        return head;
+    }
+
+    public void setHead(String head) {
+        this.head = head;
     }
 
     @Override
