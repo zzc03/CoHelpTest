@@ -35,7 +35,8 @@ public class ResultController {
         List<Result> result=resultRepository.getAllByNeedid(needid);
         for(Result a:result)
         {
-            String name=userRepository.findAllByUserId(a.getAcceptuserid()).getName();
+            User user=userRepository.findAllByUserId(a.getAcceptuserid());
+            String name=user.getName();
             results.add(new ItemResult(a,name));
         }
 
@@ -113,7 +114,9 @@ public class ResultController {
 
         for(Result a:results)
         {
-            String name=userRepository.findAllByUserId(a.getAcceptuserid()).getName().toString();
+            User user=userRepository.findAllByUserId(a.getAcceptuserid());
+            String name=user.getName();
+            String icon=user.getIcon();
             if(a.getPicture()!=0)
             {
                 List<Picture> pictures=pictureRepository.getAllByResultid(a.getResultId());
@@ -123,11 +126,11 @@ public class ResultController {
                 {
                     b.add(c.getPicture());
                 }
-               results1.add(new ItemResult(a,name,b));
+               results1.add(new ItemResult(icon,a,name,b));
             }
             else
             {
-                results1.add(new ItemResult(a,name,null));
+                results1.add(new ItemResult(icon,a,name,null));
             }
         }
 
@@ -168,7 +171,9 @@ public class ResultController {
 
         for(Result a:results)
         {
-            String name=userRepository.findAllByUserId(a.getAcceptuserid()).getName();
+            User user=userRepository.findAllByUserId(a.getAcceptuserid());
+            String name=user.getName();
+            String icon=user.getIcon();
             if(a.getPicture()!=0)
             {
                 List<Picture> pictures=pictureRepository.getAllByResultid(a.getResultId());
@@ -178,11 +183,11 @@ public class ResultController {
                 {
                     b.add(c.getPicture());
                 }
-                results1.add(new ItemResult(a,name,b));
+                results1.add(new ItemResult(icon,a,name,b));
             }
             else
             {
-                results1.add(new ItemResult(a,name,null));
+                results1.add(new ItemResult(icon,a,name,null));
             }
         }
 
