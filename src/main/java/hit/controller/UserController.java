@@ -1,6 +1,8 @@
 package hit.controller;
 
+import hit.entity.Register;
 import hit.entity.User;
+import hit.repository.RegisterRepository;
 import hit.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -16,6 +18,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RegisterRepository registerRepository;
     @GetMapping("/user/query/all")
     public List<User> getAllUser() {
         List<User> user=userRepository.findAll();
@@ -34,13 +38,12 @@ public class UserController {
 
     //post方法插入一个用户
     @PostMapping(value = "/user/add")
-    public User insertUser(@RequestParam("name")String name, @RequestParam("account")String account, @RequestParam("password") String password, @RequestParam("description") String description, @RequestParam("money") Integer money,@RequestParam("head") String head) {
+    public Register insertUser(@RequestParam("name")String name, @RequestParam("account")String account, @RequestParam("password") String password, @RequestParam("description") String description, @RequestParam("money") Integer money,@RequestParam("head") String head) {
         System.out.println("进入插入数据方法！");
-        User user;
-        user=new User(name, account, password, description, money,head);
+        Register register=new Register(account,password,name,description,head,"申请中");
         try{
-            user=userRepository.save(user);
-            return user;
+            register=registerRepository.save(register);
+            return register;
         }catch (Exception e){
             System.out.println("insert error");
             return null;
